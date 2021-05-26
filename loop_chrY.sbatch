@@ -14,6 +14,13 @@ module load samtools/1.10
 #Loop over all the bam files and extract the chrY bams
 
 for i in *.bam
-do
-   samtools view -b $i chrY > "$(basename "$i" .bam)_chrY.bam"
+do   
+samtools view -b $i chrY > "$(basename "$i" .bam)_chrY.bam"
+samtools index "$(basename "$i" .bam)_chrY.bam" #Index the new bams
 done
+
+
+#for i in *.bam
+#do
+#  echo "$(basename "$i" .bam)_chrY.bam" #This is a test to see if the renaming works!
+#done
