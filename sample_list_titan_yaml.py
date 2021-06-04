@@ -118,20 +118,33 @@ for i in range(1):
 
 
 #Now make nested dictionaries
-res1 = [{a: b} for (a, b) in zip(sample_list_for_titan1, sample_list_for_titan2)]
-res2 = [{c: d} for (c, d) in zip(pairings_text1, pairings_text2)]
+#res1 = [{a: b} for (a, b) in zip(sample_list_for_titan1, sample_list_for_titan2)]
+#res2 = [{c: d} for (c, d) in zip(pairings_text1, pairings_text2)]
 
+
+#Define dictionary
+dict1 = {}
+dict1['samples'] = {}
+dict1['pairings'] = {}
+
+i=0
+for i in range(len(sample_list_for_titan1)):
+    dict1['samples'][sample_list_for_titan1[i]] = sample_list_for_titan2[i]
+
+i=0
+for i in range(len(pairings_text1)):
+    dict1['pairings'][pairings_text1[i]] = pairings_text2[i]
 
 
 #We need to save as a yaml file
 
-dict_file = [{'samples' : res1},{'pairings' : res2 }]
+#dict_file = [{'samples' : res1},{'pairings' : res2 }]
 
-output_file = 'output.yaml'
-with open(output_file, 'w') as file:
-    documents = yaml.dump(dict_file, file)
+#output_file = 'output.yaml'
+#with open(output_file, 'w') as file:
+#    documents = yaml.dump(dict1, file)
 
-print(yaml.dump(dict_file, sort_keys=False))
+print(yaml.dump(dict1, sort_keys=False))
 
 
 
