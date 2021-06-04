@@ -56,7 +56,8 @@ for z in intersection:
 
 
 
-sample_list_for_titan = []
+sample_list_for_titan1 = []
+sample_list_for_titan2 = []
 total_n = len(case_id)
 for i in range(1):
     #Get the index that matches the case_id
@@ -72,18 +73,10 @@ for i in range(1):
     file_id_norm = np.array(df['File ID'][index_norm])[0]
     file_name_norm = np.array(df['File Name'][index_norm])[0] #Our BAM file
 
-
-    #print(file_id_tum)
-    #print(file_name_tum)
-
-    #print(file_id_norm)
-    #print(file_name_norm)
-
-
     #Now we look to copy thos files to our directory
 
     home_dir = os.getcwd()
-    hg38_dir = '../../../tcga-artemis/tcga_WXS/tcga_WXS_BAM_HG38_FILES/' #Set relative path
+    hg38_dir = '/tcga-artemis/tcga_WXS/tcga_WXS_BAM_HG38_FILES/' #Set relative path
 
 
     # Now get the normal and tumour file paths
@@ -108,35 +101,37 @@ for i in range(1):
                     #shutil.copy(norm_path + filename,'./')
                 print (filename)
                 normal_file=filename
-
+    
     #We now want a script to output the filenames and directories
-    sample_list_for_titan += ['tumour_sample_'+str(i+1)+': '+tum_path+tum_file]    #+1 to start from 1        
-    sample_list_for_titan += ['normal_sample_'+str(i+1)+': '+norm_path+normal_file]    
+    sample_list_for_titan1 += ['tumour_sample_'+str(i+1)]# +': '+tum_path+tum_file]    #+1 to start from 1        
+    sample_list_for_titan1 += ['normal_sample_'+str(i+1)]#+': '+norm_path+normal_file]    
+    sample_list_for_titan2 += [tum_path+tum_file]
+    sample_list_for_titan2 += [norm_path+normal_file]
 
-'''
-#Now save this to file
-textfile = open("titan_sample_yaml.txt", "w")
-textfile.write('samples: ' + "\n")
-for element in sample_list_for_titan:
-    textfile.write(element + "\n")
-'''
-#Now add the pairings
+
 i=0
-#textfile.write('pairings: ' + "\n")
-pairings_text = []
+pairings_text1 = []
+pairings_text2 = []
 for i in range(1):
-    pairings_text += ['tumour_sample_'+str(i+1)+': '+'normal_sample_'+str(i+1)]
-    #textfile.write(pairings_text + "\n")
+    pairings_text1 += ['tumour_sample_'+str(i+1)]#+': '+'normal_sample_'+str(i+1)]
+    pairings_text2 += ['normal_sample_'+str(i+1)]
 
-#textfile.close()
+
+#Now make nested dictionaries
+res1 = [{a: b} for (a, b) in zip(sample_list_for_titan1, sample_list_for_titan2)]
+res2 = [{c: d} for (c, d) in zip(pairings_text1, pairings_text2)]
+
+
 
 #We need to save as a yaml file
-output_file = 'output.yaml'
-dict_file = [{'samples' : sample_list_for_titan},
-{'pairings' : pairings_text }]
 
+dict_file = [{'samples' : res1},{'pairings' : res2 }]
+
+output_file = 'output.yaml'
 with open(output_file, 'w') as file:
     documents = yaml.dump(dict_file, file)
+
+print(yaml.dump(dict_file, sort_keys=False))
 
 
 
