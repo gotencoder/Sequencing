@@ -1,0 +1,16 @@
+#This is a file to note a few things about installing cmake and addind it to path etx (which was required for hmmcopy_utils)
+
+1) Cmake can be installed in two ways: i) source distribution ii) binary distribution (binary meaning it is already compiled)
+   This can be found on the cmake website : https://cmake.org/download/ (I USED THE TAR.GZ VERSION)
+
+2) Once you have downloaded the tar.gz version - unpack it using: tar -xvf blah.tar.gz
+
+3) Then we need to add the path of cmake to our ~/.bashrc script (if you are using bash!) in order that we can execute cmake from any dir
+   This can be done by:
+   i) nano ~/.bashrc
+
+   ii) Then add the following line:
+       export PATH=/path/to-cmake/bin:$PATH
+
+4) Then close all terminals and open. Veryify that this has been done correctley by: which cmake (this should return the dir where you installed cmake)
+
