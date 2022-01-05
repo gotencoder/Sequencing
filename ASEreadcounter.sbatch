@@ -29,7 +29,7 @@ CHR_list=('chr17' 'chrX') #You can also set individual chromosomes
 
 
 
-for j in *.bam
+for j in $(cat TCGA_norm_list.txt)
 do
 for i in "${CHR_list[@]}"
 do
