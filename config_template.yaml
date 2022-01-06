@@ -1,0 +1,100 @@
+## path to tools
+samTools: samtools #/data/programs/samtools-1.10  #/path/to/samtools
+bcfTools: bcftools  #/data/programs/bcftools-1.10.2  #/path/to/bcftools
+
+## path to scripts ##
+#Download these files and set paths below
+readCounterScript: /czlab/inasim/hmmcopy_utils/bin/readCounter  #/path/to/readCounter
+ichorCNA_rscript: /czlab/inasim/ichorCNA/scripts/runIchorCNA.R  #/path/to/ichorCNA.R - think it is called runIchorCNA.R now!
+ichorCNA_libdir: /czlab/inasim/ichorCNA  #/path/to/ichorCNA_code - this is optional, point to the R dir of ichorCNA
+pyCountScript: /czlab/inasim/titan_files/countPysam.py  #code/countPysam.py
+TitanCNA_rscript: /czlab/inasim/titan_files/titanCNA.R   #../R_scripts/titanCNA.R
+TitanCNA_combineTitanIchorCNA: /czlab/inasim/titan_files/combineTITAN-ichor.R #code/combineTITAN-ichor.R
+TitanCNA_selectSolutionRscript: /czlab/inasim/titan_files/selectSolution.R  #../R_scripts/selectSolution.R
+TitanCNA_libdir: /czlab/inasim/TitanCNA #../../R/
+
+
+#hg38 version is below
+genomeBuild: hg38 # Use "None" if hg19
+genomeStyle:  UCSC
+refFasta: /czlab/References/GRCh38/Homo_sapiens_assembly38.fasta  #/path/to/Homo_sapiens_assembly38.fasta
+snpVCF: /czlab/References/GRCh38/Broad/hapmap_3.3.hg38.vcf.gz  #/path/to/hapmap_3.3.hg38.vcf.gz 
+ichorCNA_exons: abcdefgh
+cytobandFile:  /czlab/inasim/titan_files/cytoBand_hg38.txt # only need if hg38
+centromere:  /czlab/inasim/titan_files/GRCh38.GCA_000001405.2_centromere_acen.txt
+sex:  None   # use "None" if both females and males are in sample set
+
+## params for each step of the snakemake ##
+
+## read depth params ##
+# use this for NCBI chr naming
+#chrs: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y #Make sure the bam has the same chr naming convention
+# use this for UCSC chr naming
+chrs: chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY 
+binSize:  50000
+
+## ichorCNA params ##
+#Need the hg38 wig files - set paths here!
+ichorCNA_gcWig:  /czlab/inasim/titan_files/gc_hg38_50kb.wig  #/path/to/gc_hg19_10kb.wig
+ichorCNA_mapWig: /czlab/inasim/titan_files/map_hg38_50kb.wig   #/path/to/map_hg19_10kb.wig
+ichorCNA_repTimeWig: /czlab/inasim/ichorCNA/inst/extdata/Koren_repTiming_hg38_50kb.wig
+ichorCNA_chrs:  c(1:22, \"X\")
+ichorCNA_normal:  c(0.5)  
+ichorCNA_ploidy:  c(2,3,4,5)  
+ichorCNA_estimateNormal:  TRUE
+ichorCNA_estimatePloidy:  TRUE
+ichorCNA_estimateClonality: TRUE
+ichorCNA_scStates:  c(1,3)
+ichorCNA_maxCN:  8
+
+
+ichorCNA_chrTrain:  paste0('chr', c(1:22))
+# penalize subclonal events - n-fold multiplier; n=1 for no penalty,  
+ichorCNA_scPenalty: 1
+ichorCNA_likModel: t  # if multisample, use "gauss"
+
+# TRUE/FALSE to include homozygous deletion state
+ichorCNA_includeHOMD: TRUE
+# control segmentation - higher (e.g. 0.9999999) leads to higher specificity and fewer segments
+ichorCNA_minMapScore: 0.75
+ichorCNA_maxFracGenomeSubclone: 0.5
+ichorCNA_maxFracCNASubclone: 0.7
+# Ignore subclonal analysis when initial normal setting >= this value
+ichorCNA_normal2IgnoreSC: 0.90
+# lower (e.g. 0.99) leads to higher sensitivity and more segments
+ichorCNA_txnE:  0.9999
+# control segmentation - higher (e.g. 10000000) leads to higher specificity and fewer segments
+# lower (e.g. 100) leads to higher sensitivity and more segments
+ichorCNA_txnStrength:  10000
+ichorCNA_plotFileType:  pdf
+ichorCNA_plotYlim:  c(-2,4)
+
+
+
+
+
+
+## allele counts - samtools, pysam ##
+# USERS MUST MODIFY getAlleleCounts.snakefile to use the correct CHRS naming
+map_quality:  10
+base_quality: 10
+vcf_quality:  100
+
+## TitanCNA params ##
+TitanCNA_maxNumClonalClusters: 2
+TitanCNA_chrs:  c(1:22, \"X\")
+TitanCNA_normalInit: 0.5
+TitanCNA_maxPloidy: 5
+TitanCNA_estimateNormal:  map
+TitanCNA_estimatePloidy:  TRUE
+TitanCNA_estimateClonality: TRUE
+TitanCNA_alleleModel: binomial
+TitanCNA_alphaK:  10000
+TitanCNA_alphaR:  10000
+TitanCNA_txnExpLen: 1e15
+TitanCNA_plotYlim:  c(-2,4)
+TitanCNA_solutionThreshold: 0.05
+TitanCNA_numCores: 1
+
+## Combine TitanCNA & ichorCNA
+mergeIchorHOMD: FALSE  # consider setting to TRUE when working with pure tumor

@@ -21,9 +21,6 @@ for a in uq_baitsets:
     case_id_superlist.append(df_temp['Sub_ID'].tolist())
     extension_superlist.append(df_temp['Extension'].tolist())
 
-print(len(case_id_superlist))
-print(len(extension_superlist))
-
 p=0
 while p<len(case_id_superlist):
     
@@ -113,7 +110,7 @@ while p<len(case_id_superlist):
          pairings_list.append("  " + str(base_lst[a]) + "_Tumor:  " + str(base_lst[a]) + "_Normal")
          a=a+1
     
-    textfile = open("samples_baitset_" + str(p) + ".yaml", "w")
+    textfile = open("/czlab/inasim/samples_baitset_" + str(p) + ".yaml", "w")
     
     textfile.write("samples:" + "\n")
     
